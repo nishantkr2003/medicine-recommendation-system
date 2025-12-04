@@ -9,6 +9,32 @@ An AI-powered system that predicts diseases and recommends suitable medicines, d
 
 ---
 
+## 🔗 Live Demo
+
+🌐 **[Try the Live Application Here](YOUR_DEPLOYED_LINK_HERE)**
+
+> Replace `YOUR_DEPLOYED_LINK_HERE` with your actual deployment link (Heroku, Render, PythonAnywhere, etc.)
+
+---
+
+## 📸 Screenshots
+
+### Home Page
+![Home Page](screenshots/home.png)
+
+### Symptom Input
+![Symptom Input](screenshots/symptom_input.png)
+
+### Prediction Results
+![Prediction Results](screenshots/results.png)
+
+### Disease Information
+![Disease Info](screenshots/disease_info.png)
+
+> **Note:** Create a `screenshots` folder in your repository and add your images there, or use direct image URLs.
+
+---
+
 ## 🚀 Features
 - Predicts disease based on entered symptoms  
 - Recommends medicines, precautions, workouts, and diets  
@@ -132,6 +158,11 @@ Medicine Recommendation System/
 │   ├── developer.html              # Developer page
 │   ├── blog.html                   # Blog page
 │   └── faq.html                    # FAQ page
+├── screenshots/                    # Screenshots for README
+│   ├── home.png
+│   ├── symptom_input.png
+│   ├── results.png
+│   └── disease_info.png
 ├── venv/                           # Virtual environment
 └── Medicine Recommendation System.ipynb     # Jupyter notebook file
 ```
