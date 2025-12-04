@@ -22,14 +22,21 @@ An AI-powered system that predicts diseases and recommends suitable medicines, d
 ### Home Page
 ![Home Page](screenshots/home.png)
 
+### About Page
+![Home Page](screenshots/about.png)
+
+### Developer Page
+![Home Page](screenshots/developer.png)
+
+### Blog Page
+![Home Page](screenshots/blog.png)
+
 ### Symptom Input
 ![Symptom Input](screenshots/symptom_input.png)
 
 ### Prediction Results
-![Prediction Results](screenshots/results.png)
+![Prediction Results](screenshots/result.png)
 
-### Disease Information
-![Disease Info](screenshots/disease_info.png)
 
 > **Note:** Create a `screenshots` folder in your repository and add your images there, or use direct image URLs.
 
@@ -160,8 +167,10 @@ Medicine Recommendation System/
 │   └── faq.html                    # FAQ page
 ├── screenshots/                    # Screenshots for README
 │   ├── home.png
-│   ├── symptom_input.png
+│   ├── about.png
 │   ├── results.png
+|   ├── symptom_input.png
+│   ├── developer.png
 │   └── disease_info.png
 ├── venv/                           # Virtual environment
 └── Medicine Recommendation System.ipynb     # Jupyter notebook file
