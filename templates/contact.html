@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Health Care Center</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+        }
+
+        main {
+            padding: 50px 0;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+
+        .contact-card {
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .contact-card i {
+            font-size: 1.6rem;
+            color: #0d6efd;
+            margin-bottom: 8px;
+        }
+
+        .contact-item {
+            margin: 20px 0;
+        }
+
+        .contact-item a {
+            color: #0d6efd;
+            text-decoration: none;
+        }
+
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background: #212529;
+            color: #adb5bd;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+
+        footer a {
+            color: #0d6efd;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <img src="{{ url_for('static', filename='img.png') }}" alt="logo" width="40" height="40"
+                class="me-2 rounded">
+            <a class="navbar-brand" href="/">Health Center</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="nav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/developer">Developer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/blog">Blog</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main -->
+    <main class="container">
+        <div class="text-center mb-4">
+            <h1>Contact Us</h1>
+            <p class="text-muted">We’d love to hear from you. Reach out through any of the options below.</p>
+        </div>
+
+        <div class="contact-card">
+            <div class="contact-item">
+                <i class="fa-solid fa-envelope"></i>
+                <h5>Email</h5>
+                <p><a href="mailto:nishantkr2003nna@gmail.com">nishantkr2003nna@gmail.com</a></p>
+            </div>
+
+            <hr>
+
+            <div class="contact-item">
+                <i class="fa-solid fa-phone"></i>
+                <h5>Phone</h5>
+                <p><a href="tel:+917541006707">+91 75410 06707</a></p>
+            </div>
+
+            <hr>
+
+            <div class="contact-item">
+                <i class="fa-brands fa-whatsapp"></i>
+                <h5>WhatsApp</h5>
+                <p><a href="https://wa.me/917541006707" target="_blank">Chat on WhatsApp</a></p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p class="mb-1">© 2025 Health Care Center | Built for learning and awareness</p>
+            <a href="/about">About</a> | <a href="/developer">Developer</a> | <a href="/faq">FAQ</a>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

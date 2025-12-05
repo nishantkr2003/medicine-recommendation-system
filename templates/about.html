@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Health Care Center</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+        }
+
+        main {
+            padding: 40px 0;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+
+        h5 {
+            color: #0d6efd;
+            margin-top: 15px;
+        }
+
+        p {
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            background: #fff;
+        }
+
+        ul {
+            padding-left: 18px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        footer {
+            background: #212529;
+            color: #adb5bd;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+
+        footer a {
+            color: #0d6efd;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <img src="{{ url_for('static', filename='img.png') }}" alt="logo" width="40" height="40"
+                class="me-2 rounded">
+            <a class="navbar-brand" href="/">Health Center</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="nav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/developer">Developer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/blog">Blog</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="text-center mb-4">
+            <h1>About Health Care Center</h1>
+            <p class="text-muted">AI-Powered Symptom Checker for Awareness and Guidance</p>
+        </div>
+
+        <div class="card mb-4">
+            <h5><i class="fa-solid fa-bullseye me-2"></i>Our Purpose</h5>
+            <p>
+                Health Care Center is an AI-based web application designed to help users understand their symptoms
+                and get an idea of possible health conditions. It uses a trained Machine Learning model to analyze
+                user inputs and suggest likely diseases with basic guidance.
+            </p>
+            <ul>
+                <li>Predicts possible diseases based on symptoms</li>
+                <li>Shows a short description of the condition</li>
+                <li>Suggests basic precautions and medications (informational only)</li>
+                <li>Recommends related workouts and diets</li>
+            </ul>
+            <p><strong>Note:</strong> This tool is for educational use only — not a medical diagnosis substitute.</p>
+        </div>
+
+        <div class="card mb-4">
+            <h5><i class="fa-solid fa-brain me-2"></i>How It Works</h5>
+            <ol>
+                <li>User enters or speaks their symptoms.</li>
+                <li>The system encodes symptoms into numeric form.</li>
+                <li>A trained ML model (Support Vector Classifier) predicts the disease.</li>
+                <li>The app displays the result along with precautions and advice.</li>
+            </ol>
+        </div>
+
+        <div class="card mb-4">
+            <h5><i class="fa-solid fa-users me-2"></i>Who Can Use It?</h5>
+            <ul>
+                <li>Students learning AI and healthcare integration</li>
+                <li>Developers experimenting with Flask + ML</li>
+                <li>People exploring basic AI-based symptom checkers</li>
+            </ul>
+        </div>
+
+        <div class="card mb-4">
+            <h5><i class="fa-solid fa-shield-heart me-2"></i>Responsible Use</h5>
+            <p>
+                Predictions are based on existing datasets and are not 100% accurate.
+                Always consult a doctor for any medical issue or emergency.
+            </p>
+        </div>
+
+        <div class="card">
+            <h5><i class="fa-solid fa-lightbulb me-2"></i>Future Plans</h5>
+            <ul>
+                <li>Better training datasets for higher accuracy</li>
+                <li>Support for multiple languages</li>
+                <li>Integration with verified healthcare APIs</li>
+                <li>Personalized symptom tracking and reports</li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p class="mb-1">© 2025 Health Care Center | Developed by Nishant Kumar</p>
+            <a href="/home">About</a> | <a href="/contact">Contact</a>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

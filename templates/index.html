@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SymptomX</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+
+    <!-- Bootstrap + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <img src="{{ url_for('static', filename='img.png') }}" alt="logo" width="40" height="40"
+                class="me-2 rounded">
+            <a class="navbar-brand" href="/">SymptomX</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav"
+                aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="nav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/developer">Developer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/blog">Blog</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-5">
+        <!-- Disclaimer Banner -->
+        <div class="disclaimer-banner" role="alert">
+            <i class="fa-solid fa-circle-info"></i>
+            <strong>Disclaimer:</strong> This AI tool is for informational purposes only and should not replace
+            professional medical advice. Always consult a healthcare provider for diagnosis and treatment.
+        </div>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <h1>AI-Powered Symptom Checker</h1>
+                    <p class="muted-small mb-4">Describe your symptoms by typing or speaking (comma-separated). Our
+                        advanced model will analyze your input and suggest the most likely condition, along with
+                        recommended precautions, medications, and lifestyle suggestions.</p>
+
+                    <form action="/predict" method="post" class="mb-3" id="symptomForm" autocomplete="off">
+                        <label for="symptoms" class="form-label visually-hidden">Symptoms</label>
+                        <div class="input-group">
+                            <input id="symptoms" name="symptoms" type="text" class="form-control"
+                                placeholder="e.g., itching, skin rash, cough, fever" aria-label="Symptoms input"
+                                required>
+                            <button id="startSpeechRecognition" type="button" class="btn btn-primary mic"
+                                title="Click to use voice input (requires microphone permission)"
+                                aria-label="Start voice recognition">
+                                <i class="fa-solid fa-microphone"></i>
+                            </button>
+                        </div>
+
+                        <div id="transcription" aria-live="polite" role="status" aria-label="Speech recognition status">
+                        </div>
+
+                        {% if message %}
+                        <div class="mt-2 alert alert-warning alert-sm small mb-0">
+                            <i class="fa-solid fa-exclamation-triangle me-2"></i>{{ message }}
+                        </div>
+                        {% endif %}
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-danger btn-lg w-100" id="predictBtn">
+                                <i class="fa-solid fa-stethoscope me-2"></i> Analyze Symptoms
+                            </button>
+                        </div>
+                    </form>
+
+                    <p class="muted-small mb-0"><i class="fa-solid fa-lightbulb me-2" style="color: #f59e0b;"></i>Tip:
+                        Separate multiple symptoms with commas for best accuracy.</p>
+                </div>
+
+                <div class="col-lg-5 text-center d-none d-lg-block">
+                    <img src="{{ url_for('static', filename='Stethoscope.png') }}" alt="Medical illustration"
+                        class="img-fluid"
+                        style="max-width: 240px; opacity: 0.95; filter: drop-shadow(0 8px 16px rgba(38, 138, 243, 0.15));">
+                </div>
+            </div>
+
+            <!-- Symptoms Dropdown -->
+            <div class="mt-4 pt-4 border-top" style="border-color: rgba(38, 138, 243, 0.1) !important;">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <small class="text-muted">Need help with symptoms?</small>
+                    <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#commonSymptoms" aria-expanded="false" aria-controls="commonSymptoms">
+                        <i class="fa-solid fa-chevron-down me-2"></i> View Common Symptoms
+                    </button>
+                </div>
+                <div class="collapse" id="commonSymptoms">
+                    <div class="bg-white rounded p-3 mt-2"
+                        style="max-height: 350px; overflow-y: auto; border: 1px solid rgba(38, 138, 243, 0.15);">
+
+                        <!-- Search bar -->
+                        <div class="mb-3">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </span>
+                                <input type="text" class="form-control" id="symptomSearch"
+                                    placeholder="Search symptoms (e.g. cough, headache, fever)">
+                            </div>
+                            <small class="text-muted d-block mt-1">
+                                Click a symptom to add it to the box above. You can select multiple.
+                            </small>
+                        </div>
+
+                        <div class="row g-2">
+
+                            <!-- 🩺 Most common, real-world symptoms -->
+                            <div class="col-12 mb-2">
+                                <small class="text-muted d-block mb-2"><strong>Most Common Symptoms</strong></small>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">high_fever</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">mild_fever</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">headache</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">fatigue</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">cough</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">cold_hands_and_feets</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">itching</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">skin_rash</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">vomiting</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">nausea</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">diarrhoea</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">abdominal_pain</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">stomach_pain</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">back_pain</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">chest_pain</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">joint_pain</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">breathlessness</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">dizziness</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">loss_of_appetite</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">anxiety</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">depression</span>
+                                <span class="badge bg-primary-subtle text-dark me-1 mb-1">mood_swings</span>
+                            </div>
+
+                            <!-- 😷 Moderately common -->
+                            <div class="col-6 col-md-4">
+                                <small class="text-muted d-block mb-2"><strong>Moderately Common</strong></small>
+                                <span class="badge bg-light text-dark me-1 mb-1">runny_nose</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">congestion</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">throat_irritation</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">sinus_pressure</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">redness_of_eyes</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">watering_from_eyes</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">malaise</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">lethargy</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">restlessness</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">weakness_in_limbs</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">muscle_pain</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">neck_pain</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">knee_pain</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">hip_joint_pain</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">obesity</span>
+                            </div>
+
+                            <!-- ⚕️ Less common -->
+                            <div class="col-6 col-md-4">
+                                <small class="text-muted d-block mb-2"><strong>Less Common</strong></small>
+                                <span class="badge bg-light text-dark me-1 mb-1">burning_micturition</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">dark_urine</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">yellowish_skin</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">yellow_urine</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">swelling_joints</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">stiff_neck</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">pain_behind_the_eyes</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">blurred_and_distorted_vision</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">visual_disturbances</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">excessive_hunger</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">weight_loss</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">weight_gain</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">indigestion</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">ulcers_on_tongue</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">patches_in_throat</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">belly_pain</span>
+                            </div>
+
+                            <!-- 🧬 Rare / specific -->
+                            <div class="col-6 col-md-4">
+                                <small class="text-muted d-block mb-2"><strong>Rare / Specific</strong></small>
+                                <span class="badge bg-light text-dark me-1 mb-1">enlarged_thyroid</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">brittle_nails</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">inflammatory_nails</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">skin_peeling</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">pus_filled_pimples</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">blackheads</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">scurring</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">small_dents_in_nails</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">swelling_of_stomach</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">swelled_lymph_nodes</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">prominent_veins_on_calf</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">palpitations</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">acute_liver_failure</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">fluid_overload</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">polyuria</span>
+                                <span class="badge bg-light text-dark me-1 mb-1">internal_itching</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        {% if predicted_disease %}
+        <section class="mt-5 pt-4">
+            <h2 class="mb-1">Analysis Results</h2>
+            <p class="text-muted small mb-4">Based on your input symptoms:</p>
+
+            <div class="d-flex flex-wrap gap-2 result-actions mb-4">
+                <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#diseaseModal"
+                    aria-label="View predicted disease">
+                    <i class="fa-solid fa-virus-covid me-2"></i> Disease
+                </button>
+                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                    data-bs-target="#descriptionModal" aria-label="View disease description">
+                    <i class="fa-solid fa-info-circle me-2"></i> Description
+                </button>
+                <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal"
+                    data-bs-target="#precautionModal" aria-label="View precautions">
+                    <i class="fa-solid fa-shield-halved me-2"></i> Precautions
+                </button>
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                    data-bs-target="#medicationsModal" aria-label="View recommended medications">
+                    <i class="fa-solid fa-pills me-2"></i> Medications
+                </button>
+                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                    data-bs-target="#workoutsModal" aria-label="View recommended workouts">
+                    <i class="fa-solid fa-dumbbell me-2"></i> Workouts
+                </button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                    data-bs-target="#dietsModal" aria-label="View recommended diets">
+                    <i class="fa-solid fa-apple-whole me-2"></i> Diets
+                </button>
+            </div>
+
+            <div class="row result-cards g-3 align-items-stretch">
+                <div class="col-md-4 d-flex">
+                    <div class="card p-4 w-100 h-100">
+                        <h5 class="mb-2">
+                            <i class="fa-solid fa-heartbeat me-2" style="color: #ef4444;"></i>
+                            Predicted Condition
+                        </h5>
+                        <p class="h4 mb-3" style="color: var(--accent);">{{ predicted_disease }}</p>
+                        <small class="text-muted d-block mt-auto">
+                            <i class="fa-solid fa-shield-alt me-1"></i>
+                            Always consult a healthcare professional for confirmation.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="col-md-8 d-flex">
+                    <div class="card p-4 w-100 h-100">
+                        <h5 class="mb-3">
+                            <i class="fa-solid fa-file-lines me-2" style="color: #268AF3;"></i>
+                            Summary
+                        </h5>
+                        <div style="line-height: 1.8; color: #374151; max-height: 200px; overflow-y: auto;">
+                            {{ dis_des }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+        {% endif %}
+
+        <!-- Modals -->
+        <div class="modal fade" id="diseaseModal" tabindex="-1" aria-labelledby="diseaseModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="diseaseModalLabel"><i
+                                class="fa-solid fa-virus-covid me-2"></i>Predicted Disease</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-0 h5" style="color: var(--accent);">{{ predicted_disease }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="descriptionModalLabel"><i
+                                class="fa-solid fa-info-circle me-2"></i>Description</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>{{ dis_des }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="precautionModal" tabindex="-1" aria-labelledby="precautionModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="precautionModalLabel"><i
+                                class="fa-solid fa-shield-halved me-2"></i>Precautions</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-unstyled">
+                            {% for i in my_precautions %}
+                            <li class="mb-2"><i class="fa-solid fa-check me-2" style="color: var(--success);"></i>{{ i
+                                }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="medicationsModal" tabindex="-1" aria-labelledby="medicationsModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="medicationsModalLabel"><i
+                                class="fa-solid fa-pills me-2"></i>Medications</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info alert-sm" role="alert">
+                            <small><i class="fa-solid fa-circle-info me-2"></i>Consult your doctor before starting any
+                                medication.</small>
+                        </div>
+                        <ul class="list-unstyled">
+                            {% for i in medications %}
+                            <li class="mb-2"><i class="fa-solid fa-pill me-2" style="color: #ef4444;"></i>{{ i }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="workoutsModal" tabindex="-1" aria-labelledby="workoutsModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="workoutsModalLabel"><i
+                                class="fa-solid fa-dumbbell me-2"></i>Recommended Workouts</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-unstyled">
+                            {% for i in workout %}
+                            <li class="mb-2"><i class="fa-solid fa-circle-play me-2"
+                                    style="color: var(--success);"></i>{{ i }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="dietsModal" tabindex="-1" aria-labelledby="dietsModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="dietsModalLabel"><i
+                                class="fa-solid fa-apple-whole me-2"></i>Recommended Diets</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-unstyled">
+                            {% for i in my_diet %}
+                            <li class="mb-2"><i class="fa-solid fa-leaf me-2" style="color: var(--success);"></i>{{ i }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row g-4 mb-3">
+                <div class="col-md-3">
+                    <h6>About</h6>
+                    <div class="footer-link"><a href="/about">About Us</a></div>
+                    <div class="footer-link"><a href="#">Our Mission</a></div>
+                    <div class="footer-link"><a href="/developer">Our Team</a></div>
+                </div>
+                <div class="col-md-3">
+                    <h6>Support</h6>
+                    <div class="footer-link"><a href="/contact">Contact Us</a></div>
+                    <div class="footer-link"><a href="/blog">Blog</a></div>
+                    <div class="footer-link"><a href="/faq">FAQ</a></div>
+                </div>
+                <div class="col-md-3">
+                    <h6>Legal</h6>
+                    <div class="footer-link"><a href="#">Privacy Policy</a></div>
+                    <div class="footer-link"><a href="/about">Terms of Service</a></div>
+                    <div class="footer-link"><a href="/about">Disclaimer</a></div>
+                </div>
+                <div class="col-md-3">
+                    <h6>Follow Us</h6>
+                    <div class="d-flex gap-2">
+                        <a href="https://www.linkedin.com/in/nishant-kumar-749279260/"
+                            class="btn btn-sm btn-outline-secondary" aria-label="LinkedIn" target="_blank">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://github.com/nishantkr2003" class="btn btn-sm btn-outline-secondary"
+                            aria-label="GitHub" target="_blank">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+            <hr class="divider-footer">
+            <div class="text-center">
+                <p class="mb-0"><small>&copy; 2025 Health Care Center. All rights reserved. This tool is for
+                        informational purposes only.</small></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const startBtn = document.getElementById('startSpeechRecognition');
+            const transcription = document.getElementById('transcription');
+            const symptomsInput = document.getElementById('symptoms');
+            const predictBtn = document.getElementById('predictBtn');
+            const symptomForm = document.getElementById('symptomForm');
+
+            //Speech recognition
+            if (startBtn) {
+                startBtn.addEventListener('click', startSpeechRecognition);
+            }
+
+            function startSpeechRecognition() {
+                transcription.textContent = '🎤 Listening...';
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (!SpeechRecognition) {
+                    transcription.textContent = '❌ Speech recognition not supported in this browser.';
+                    return;
+                }
+                const recognition = new SpeechRecognition();
+                recognition.lang = 'en-US';
+                recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
+
+                recognition.onresult = function (event) {
+                    const result = event.results[0][0].transcript;
+                    transcription.textContent = '✓ Recognized: ' + result;
+                    symptomsInput.value = result;
+                    symptomsInput.focus();
+                };
+
+                recognition.onerror = function () {
+                    transcription.textContent = '❌ Could not recognize speech. Please try again.';
+                };
+
+                recognition.onend = function () {
+                    if (transcription.textContent === '🎤 Listening...') {
+                        transcription.textContent = '';
+                    }
+                };
+
+                recognition.start();
+            }
+
+            // Loading state on Predict button
+            if (symptomForm && predictBtn) {
+                symptomForm.addEventListener('submit', function () {
+                    predictBtn.disabled = true;
+                    predictBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Analyzing...';
+                    // The page will usually reload on submit; this is just a fallback
+                });
+            }
+
+            // Click-to-add for symptom badges in "View Common Symptoms"
+            const symptomBadges = document.querySelectorAll('#commonSymptoms .badge');
+            symptomBadges.forEach(function (badge) {
+                badge.addEventListener('click', function () {
+                    const symptom = this.textContent.trim();
+
+                    // Current symptoms as array (without empty strings)
+                    const current = symptomsInput.value
+                        .split(',')
+                        .map(s => s.trim())
+                        .filter(s => s.length > 0);
+
+                    // Avoid adding duplicates
+                    if (!current.includes(symptom)) {
+                        current.push(symptom);
+                    }
+
+                    symptomsInput.value = current.join(', ');
+                    symptomsInput.focus();
+                });
+            });
+            // Search filter for symptoms
+            if (symptomSearch) {
+                symptomSearch.addEventListener('input', function () {
+                    const query = this.value.trim().toLowerCase();
+                    symptomBadges.forEach(function (badge) {
+                        const text = badge.textContent.toLowerCase();
+                        if (!query || text.includes(query)) {
+                            badge.classList.remove('d-none');
+                        } else {
+                            badge.classList.add('d-none');
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
+        </script>
+</body>
+
+</html>
