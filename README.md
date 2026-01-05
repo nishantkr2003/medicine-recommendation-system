@@ -115,7 +115,7 @@ source venv/bin/activate
 
 Install all required Python packages using pip:
 ```bash
-pip install scikit-learn==1.4.2 pandas numpy flask
+pip install -r requirements.txt
 ```
 
 ### 4️⃣ Run the Application
