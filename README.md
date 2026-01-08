@@ -38,7 +38,7 @@ An AI-powered system that predicts diseases and recommends suitable medicines, d
 ![Prediction Results](screenshots/result.png.png)
 
 
-> **Note:** Create a `screenshots` folder in your repository and add your images there, or use direct image URLs..
+> **Note:** Create a `screenshots` folder in your repository and add your images there, or use direct image URLs.
 
 ---
 
